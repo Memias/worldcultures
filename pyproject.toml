@@ -1,10 +1,26 @@
 [project]
-name = "uv-cloudflare-workers-example"
-version = "0.0.1"
+name = "uv-workers-cloudflare-example"
+version = "0.1.0"
+description = "A Python worker targeting Cloudflare"
 readme = "README.md"
-requires-python = ">=3.12"
+# Cloudflare Workers strictly require Python >=3.12 for their modern runtime
+requires-python = ">=3.12" 
 dependencies = [
-    "cffi",
-    "fastapi",
-    "jinja2",
+    "cffi>=1.17.1",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[dependency-groups]
+dev = [
+    "workers-py>=0.2.0", # Official Cloudflare utilities & Pywrangler sync tool
+]
+
+[tool.uv]
+# Explicitly forces uv to resolve wheels for BOTH your Linux host and Cloudflare (Pyodide Wasm)
+required-environments = [
+    "sys_platform == 'linux' and platform_machine == 'x86_64'",
+    "sys_platform == 'emscripten' and platform_machine == 'wasm32'"
 ]
